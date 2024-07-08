@@ -1,0 +1,15 @@
+{
+  "accountCreatedSuccessfully": "Konto zostało utworzone",
+  "company": "Firma",
+  "createAccountDesc": "Nie masz konta?",
+  "email": "Email",
+  "or": "lub",
+  "password": "Hasło",
+  "signedInSuccessfully": "Zalogowano pomyślnie",
+  "signIn": "Zaloguj się",
+  "signUp": "Zarejestruj się",
+  "student": "Student",
+  "selectAccountType": "Wybierz typ konta",
+  "confirmPassword": "Powtórz hasło",
+  "accountExistsDesc": "Masz już konto?"
+}

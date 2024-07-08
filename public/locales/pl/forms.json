@@ -1,0 +1,14 @@
+{
+  "dateInFuture": "Data musi być co najmniej rok w przeszłości",
+  "dateToShouldBeLaterThanDateFrom": "Data końca nie może być wcześniejsza niż początku",
+  "fieldRequired": "Pole jest wymagane",
+  "invalidDate": "Niepoprawny format daty",
+  "invalidEmail": "Niepoprawny email",
+  "invalidNumber": "Nieprawidłowa wartość",
+  "invalidValue": "Nieprawidłowa wartość",
+  "negativeNumber": "Wartość musi być większa niż 0",
+  "nipRequiredForEconomicActivity": "NIP jest wymagany przy type Działalność Gospodarcza",
+  "selectMinOneValue": "Wybierz przynajmniej jedną wartość",
+  "tooLong": "Wpisz maksymalnie 75 znaków",
+  "tooLongDesc": "Wpisz maksymalnie 500 znaków"
+}

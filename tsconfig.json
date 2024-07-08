@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"],
+      "@/components": ["./components"],
+      "@/modules": ["./modules"],
+      "@/utils": ["./utils"],
+      "@/types": ["./types"],
+      "@/hooks": ["./hooks"],
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/common/i18n/TranslationsProvider.js", "next-i18next.config.js", "app/i18n.js"],
+  "exclude": ["node_modules"],
+  "baseUrl": "."
+}
