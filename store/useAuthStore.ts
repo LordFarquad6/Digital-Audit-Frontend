@@ -7,7 +7,6 @@ export enum Role {
   ADMIN = 'ADMIN',
   COMPANY = 'COMPANY',
   STUDENT = 'STUDENT',
-  SCHOOL = 'SCHOOL',
 }
 
 export type TStateAuthStore = {

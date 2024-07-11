@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { ColorSchemeScript, createTheme, MantineProvider } from '@mantine/core'
 import './globals.css'
@@ -9,6 +8,7 @@ import { RouterTransition } from '@/components/public/RouterTransition'
 import React from 'react'
 import { ReactQueryClientProvider } from '@/components/config/ReactQueryClientProvider'
 import { Notifications } from '@mantine/notifications'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const inter = Poppins({ subsets: ['latin'], weight: ['400', '500', '600'] })
 
@@ -32,11 +32,6 @@ const theme = createTheme({
   black: '#3a4752',
 })
 
-export const metadata: Metadata = {
-  title: 'Next 14 Boilerplate',
-  description: 'New Next 14 boilerplate with Mantine and TypeScript',
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -55,6 +50,9 @@ export default function RootLayout({
             {children}
           </MantineProvider>
         </ReactQueryClientProvider>
+        <GoogleAnalytics
+          gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string}
+        />
       </body>
     </html>
   )

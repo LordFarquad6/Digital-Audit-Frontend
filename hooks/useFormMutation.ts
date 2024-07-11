@@ -85,7 +85,7 @@ export const useFormMutation = <FormFields extends FieldValues, ServerResponse>(
     }
   }
 
-  const { isPending, mutate } = useMutation({
+  const { isPending, isError, isSuccess, mutate } = useMutation({
     mutationFn,
     ...options,
     onError: (error: AxiosError<ApiErrorData>, variables, context) => {
@@ -105,5 +105,5 @@ export const useFormMutation = <FormFields extends FieldValues, ServerResponse>(
   const handleSubmit = methods.handleSubmit(((data: FormFields) =>
     mutate(data)) as SubmitHandler<FieldValues>)
 
-  return { methods, handleSubmit, isPending }
+  return { methods, handleSubmit, isPending, isError, isSuccess }
 }

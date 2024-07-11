@@ -1,7 +1,5 @@
 'use client'
-import logo from '@/public/logo-black.png'
 import { nprogress } from '@mantine/nprogress'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -39,7 +37,7 @@ export const TopNavigation = () => {
               Tab
             </Link>
             <Link
-              href="/sign-in"
+              href="/auth/sign-in"
               className="bg-primary rounded-full px-4 py-2 text-white text-sm hover:bg-primary-hover transition-colors"
               onClick={() => nprogress.start()}
             >

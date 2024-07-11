@@ -24,6 +24,7 @@
       "@/utils": ["./utils"],
       "@/types": ["./types"],
       "@/hooks": ["./hooks"],
+      "@/app": ["./app"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/common/i18n/TranslationsProvider.js", "next-i18next.config.js", "app/i18n.js"],

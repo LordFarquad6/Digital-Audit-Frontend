@@ -140,7 +140,6 @@ export const InputTextPure = ({
 }
 
 export const InputTextPureDebounced = ({
-  icon: Icon,
   label,
   placeholder,
   error,

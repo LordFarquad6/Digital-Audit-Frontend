@@ -1,10 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { FaStar } from 'react-icons/fa'
-import mobitouch from '@/public/mobitouch.png'
-import { OfferCard } from '../../components/public/OfferCard'
-import cetuspro from '@/public/cetuspro.svg'
-import { ScrolledContainer } from '../../components/public/ScrolledContainer'
 import { useTranslation } from 'react-i18next'
 
 export const Hero = () => {
@@ -31,7 +26,7 @@ export const Hero = () => {
               Read more
             </Link>
             <Link
-              href="/sign-up"
+              href="/auth/sign-up"
               className="border-primary border text-primary rounded-full px-4 py-3 text-sm hover:bg-primary hover:text-white transition-colors"
             >
               {t('common:signUp')}
