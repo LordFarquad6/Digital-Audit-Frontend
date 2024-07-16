@@ -1,5 +1,8 @@
+"use client"
+
 import { Poppins } from 'next/font/google'
-import { ColorSchemeScript, createTheme, MantineProvider } from '@mantine/core'
+import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import { Global } from '@emotion/react';
 import './globals.css'
 import '@mantine/core/styles.css'
 import '@mantine/nprogress/styles.css'
@@ -9,34 +12,28 @@ import React from 'react'
 import { ReactQueryClientProvider } from '@/components/config/ReactQueryClientProvider'
 import { Notifications } from '@mantine/notifications'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { lightTheme, darkTheme } from '@/utils/themes';
+import { useThemeStore } from '@/store/useThemeStore'
 
 const inter = Poppins({ subsets: ['latin'], weight: ['400', '500', '600'] })
 
-const theme = createTheme({
-  primaryColor: 'primary',
-  colors: {
-    primary: [
-      '#ffffff',
-      '#e6f1ff',
-      '#cce4ff',
-      '#9ac8ff',
-      '#80bbff',
-      '#67adff',
-      '#1b84ff',
-      '#4e9fff',
-      '#3492ff',
-      '#1b84ff',
-    ],
-  },
-  fontFamily: inter.className,
-  black: '#3a4752',
-})
+const GlobalStyles = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
+  <Global
+    styles={{
+      body: {
+        backgroundColor: colorScheme === 'dark' ? '#0d1117' : '#f0f0f0',
+        color: colorScheme === 'dark' ? '#ffffff' : '#000000',
+      },
+    }}
+  />
+);
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { colorScheme, toggleColorScheme } = useThemeStore();
   return (
     <html lang="en">
       <head>
@@ -44,7 +41,8 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ReactQueryClientProvider>
-          <MantineProvider theme={theme}>
+          <MantineProvider theme={colorScheme === 'dark' ? darkTheme : lightTheme}>
+            <GlobalStyles colorScheme={colorScheme} />
             <RouterTransition />
             <Notifications />
             {children}

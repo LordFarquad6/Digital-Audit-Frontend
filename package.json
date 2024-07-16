@@ -11,6 +11,7 @@
     "translations:verify": "node cli/verifyTranslations.js"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
     "@hookform/resolvers": "^3.7.0",
     "@mantine/core": "^7.11.1",
     "@mantine/dates": "^7.11.1",

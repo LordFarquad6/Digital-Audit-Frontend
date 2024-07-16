@@ -113,3 +113,4 @@ if (!process.env.DEEPL_KEY) {
     console.log('Translation files are up to date')
   }
 })()
+
