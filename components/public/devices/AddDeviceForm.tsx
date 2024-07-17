@@ -1,5 +1,5 @@
 import { Card, Text, Button, TextInput, Select, FileInput } from '@mantine/core';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 import { Device, brands } from '@/types/deviceTypes';
 
 interface AddDeviceFormProps {
@@ -7,7 +7,7 @@ interface AddDeviceFormProps {
 }
 
 const AddDeviceForm: React.FC<AddDeviceFormProps> = ({ onSubmit }) => {
-  const { register, handleSubmit, formState: { errors }, setValue } = useFormContext<Device>();
+  const { register, handleSubmit, formState: { errors }, setValue, control } = useFormContext<Device>();
 
   return (
     <Card shadow="sm" padding="lg">
@@ -20,12 +20,24 @@ const AddDeviceForm: React.FC<AddDeviceFormProps> = ({ onSubmit }) => {
           {...register('name')}
           error={errors.name?.message}
         />
-        <Select
-          label="Marka"
-          data={brands.map(brand => ({ value: brand, label: brand }))}
-          {...register('brand')}
-          error={errors.brand?.message}
-          searchable
+        <Controller
+          name="brand"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <Select
+              label="Marka"
+              data={brands.map(brand => ({ value: brand, label: brand }))}
+              {...field}
+              onChange={(value) => {
+                if (value !== field.value) {
+                  field.onChange(value || '');
+                }
+              }}
+              error={errors.brand?.message}
+              searchable
+            />
+          )}
         />
         <TextInput
           label="Model"
@@ -42,14 +54,26 @@ const AddDeviceForm: React.FC<AddDeviceFormProps> = ({ onSubmit }) => {
           {...register('serialNumber')}
           error={errors.serialNumber?.message}
         />
-        <Select
-          label="Status"
-          data={[
-            { value: 'active', label: 'Aktywne' },
-            { value: 'inactive', label: 'Nieaktywne' },
-          ]}
-          {...register('status')}
-          error={errors.status?.message}
+        <Controller
+          name="status"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <Select
+              label="Status"
+              data={[
+                { value: 'active', label: 'Aktywne' },
+                { value: 'inactive', label: 'Nieaktywne' },
+              ]}
+              {...field}
+              onChange={(value) => {
+                if (value !== field.value) {
+                  field.onChange(value || '');
+                }
+              }}
+              error={errors.status?.message}
+            />
+          )}
         />
         <FileInput
           label="Zdjęcie"

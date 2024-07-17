@@ -1,15 +1,20 @@
-import { Modal, Text, Group, Button } from '@mantine/core';
+import { Modal, Text, Button, Group } from '@mantine/core';
 
 interface RetireDeviceModalProps {
   opened: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  deviceName: string | null;
 }
 
-const RetireDeviceModal: React.FC<RetireDeviceModalProps> = ({ opened, onClose, onConfirm }) => {
+const RetireDeviceModal: React.FC<RetireDeviceModalProps> = ({ opened, onClose, onConfirm, deviceName }) => {
   return (
-    <Modal opened={opened} onClose={onClose} title="Potwierdzenie">
-      <Text>Czy na pewno chcesz wycofać te urządzenie z użytku?</Text>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title="Potwierdzenie"
+    >
+      <Text>Czy na pewno chcesz wycofać urządzenie {deviceName} z użytku?</Text>
       <Group position="apart" mt="md">
         <Button variant="outline" onClick={onClose}>Anuluj</Button>
         <Button color="red" onClick={onConfirm}>Wycofaj</Button>
