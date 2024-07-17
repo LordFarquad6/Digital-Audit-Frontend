@@ -40,14 +40,8 @@ export const TopNavigation = () => {
               menuOpen ? 'flex' : 'hidden md:flex'
             } flex-col md:flex-row absolute md:static right-0 top-full items-center gap-8 shadow-xl md:shadow-none p-3 md:p-0 dark:bg-gray-800 rounded-lg w-max z-20`}
           >
-            <Link href="/public/tab" className="hover:text-primary">
-              Tab
-            </Link>
-            <Link href="/public/tab" className="hover:text-primary">
-              Tab
-            </Link>
-            <Link href="/public/tab" className="hover:text-primary">
-              Tab
+            <Link href="/devices" className="hover:text-primary">
+              {t('common:Devices')}
             </Link>
             <Link
               href="/auth/sign-in"

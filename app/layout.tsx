@@ -21,7 +21,7 @@ const GlobalStyles = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
   <Global
     styles={{
       body: {
-        backgroundColor: colorScheme === 'dark' ? '#0d1117' : '#f0f0f0',
+        backgroundColor: colorScheme === 'dark' ? '#0d1117' : '#f5f5f5',
         color: colorScheme === 'dark' ? '#ffffff' : '#000000',
       },
     }}
@@ -33,7 +33,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const { colorScheme, toggleColorScheme } = useThemeStore();
+  const { colorScheme } = useThemeStore();
+  console.log(colorScheme)
+  
   return (
     <html lang="en">
       <head>
@@ -45,6 +47,7 @@ export default function RootLayout({
             <GlobalStyles colorScheme={colorScheme} />
             <RouterTransition />
             <Notifications />
+            
             {children}
           </MantineProvider>
         </ReactQueryClientProvider>

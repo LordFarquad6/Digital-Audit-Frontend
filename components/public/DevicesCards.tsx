@@ -4,6 +4,7 @@ import { Card, Text, Badge, Button, Group, Grid, Container, TextInput, Select, S
 import { DatePicker } from '@mantine/dates';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useMantineTheme } from '@mantine/core';
 
 interface Device {
   id: string;
@@ -55,6 +56,8 @@ const DevicesPage = () => {
     imageUrl: '',
   });
 
+  const theme = useMantineTheme();
+  console.log(theme)
   useEffect(() => {
     // Simulacja pobierania danych
     setDevices(devicesData);
@@ -109,7 +112,9 @@ const DevicesPage = () => {
         <Box flex={2}>
           <SimpleGrid cols={1} spacing="md">
             {devices.map(device => (
-              <Card key={device.id} shadow="sm" padding="lg">
+              <Card key={device.id} shadow="sm" padding="lg" style={{ 
+                  backgroundColor: theme.white,
+                }}>
                 <Card.Section>
                   <Image src={device.imageUrl || '/placeholder.png'} height={160} width={300} alt={device.name} />
                 </Card.Section>
@@ -128,7 +133,9 @@ const DevicesPage = () => {
           </SimpleGrid>
         </Box>
         <Box flex={1}>
-          <Card shadow="sm" padding="lg">
+          <Card shadow="sm" padding="lg" style={{ 
+        
+            }}>
             <Text size="lg" weight={500} style={{ marginBottom: '1rem' }}>
               Dodaj Nowe Urządzenie
             </Text>

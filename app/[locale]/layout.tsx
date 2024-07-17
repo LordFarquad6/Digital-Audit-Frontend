@@ -5,6 +5,7 @@ import initTranslations from '../i18n'
 import { TranslationsProvider } from '@/components/common/i18n/TranslationsProvider'
 import { Metadata } from 'next'
 import { MetadataLayoutProps } from '@/types/config/metadata'
+import { TopNavigation } from '@/modules/public/TopNavigation'
 
 export async function generateMetadata({
   params: { locale },
@@ -68,6 +69,7 @@ export default async function InternalizationLayout({
       locale={locale}
       resources={resources}
     >
+      <TopNavigation />
       {children}
     </TranslationsProvider>
   )

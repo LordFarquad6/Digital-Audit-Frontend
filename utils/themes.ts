@@ -30,6 +30,7 @@ export const lightTheme: MantineThemeOverride = {
   },
   fontFamily: 'Poppins, sans-serif',
   black: '#101010',
+  white: '#ffffff',
 };
 
 export const darkTheme: MantineThemeOverride = {
@@ -62,4 +63,5 @@ export const darkTheme: MantineThemeOverride = {
   },
   fontFamily: 'Poppins, sans-serif',
   black: '#efefef',
+  white: '#000000',
 };
