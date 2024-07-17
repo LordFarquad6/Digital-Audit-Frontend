@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Container, SimpleGrid, Box, Flex } from '@mantine/core';
-import { useMantineTheme } from '@mantine/core';
 import AddDeviceForm from '@/components/public/devices/AddDeviceForm';
 import DeviceCard from '@/components/public/devices/DevicesCard';
 import RetireDeviceModal from '@/components/public/devices/RetireDeviceModal';
@@ -17,7 +16,7 @@ const addDevice = async (data: DeviceSchema) => {
       brand: data.brand || '',
       status: data.status || ''
     };
-    setTimeout(() => resolve(deviceWithDefaults), 500);
+    return deviceWithDefaults
   });
 };
 
@@ -25,8 +24,6 @@ const DevicesPage = () => {
   const [devices, setDevices] = useState<Device[]>([]);
   const [modalOpened, setModalOpened] = useState(false);
   const [deviceToRetire, setDeviceToRetire] = useState<Device | null>(null);
-
-  const theme = useMantineTheme();
 
   useEffect(() => {
     // api call here 
@@ -49,12 +46,14 @@ const DevicesPage = () => {
 
   const handleRetireDevice = (device: Device) => {
     setDeviceToRetire(device);
+    // delete device api call
     setModalOpened(true);
   };
 
   const confirmRetireDevice = () => {
     if (deviceToRetire) {
       setDevices((prev) => prev.filter(device => device.id !== deviceToRetire.id));
+      // delete device api call 
       setModalOpened(false);
       setDeviceToRetire(null);
     }
