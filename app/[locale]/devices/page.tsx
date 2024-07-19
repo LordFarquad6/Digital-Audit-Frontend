@@ -30,7 +30,7 @@ const DevicesPage = () => {
     setDevices(devicesData);
   }, []);
 
-  const { methods, handleSubmit, isPending, isError, isSuccess } = useFormMutation(
+  const { methods, handleSubmit } = useFormMutation(
     deviceSchema,
     addDevice,
     {

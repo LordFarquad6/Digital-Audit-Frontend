@@ -1,11 +1,6 @@
+import { RetireDeviceModalProps } from '@/types/deviceTypes';
 import { Modal, Text, Button, Group } from '@mantine/core';
 
-interface RetireDeviceModalProps {
-  opened: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  deviceName: string | null;
-}
 
 const RetireDeviceModal: React.FC<RetireDeviceModalProps> = ({ opened, onClose, onConfirm, deviceName }) => {
   return (

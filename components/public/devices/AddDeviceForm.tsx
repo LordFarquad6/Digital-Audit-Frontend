@@ -1,10 +1,6 @@
 import { Card, Text, Button, TextInput, Select, FileInput } from '@mantine/core';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Device, brands } from '@/types/deviceTypes';
-
-interface AddDeviceFormProps {
-  onSubmit: () => void;
-}
+import { AddDeviceFormProps, Device, brands } from '@/types/deviceTypes';
 
 const AddDeviceForm: React.FC<AddDeviceFormProps> = ({ onSubmit }) => {
   const { register, handleSubmit, formState: { errors }, setValue, control } = useFormContext<Device>();
@@ -12,7 +8,7 @@ const AddDeviceForm: React.FC<AddDeviceFormProps> = ({ onSubmit }) => {
   return (
     <Card shadow="sm" padding="lg">
       <Text size="lg" weight={500} style={{ marginBottom: '1rem' }}>
-        Dodaj Nowe Urządzenie
+        Dodaj nowe urządzenie do organizacji
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextInput
