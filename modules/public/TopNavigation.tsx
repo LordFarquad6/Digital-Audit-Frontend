@@ -26,7 +26,7 @@ export const TopNavigation = () => {
     <div className="">
       <div className="max-w-screen-2xl mx-auto flex justify-between items-center p-5">
         <div className="flex items-center">
-          <h1 style={{fontSize: 18}}>DIGITAL-AUDIT</h1>
+          <h1 style={{fontSize: 18}}><Link href="/">DIGITAL-AUDIT</Link></h1>
         </div>
         <div className="relative">
           <button

@@ -14,6 +14,10 @@ export const requiredString = rawRequiredString.max(75, {
   message: 'forms:tooLong',
 })
 
+export const requiredUsername = rawRequiredString.max(50, {
+  message: 'forms:tooLong',
+})
+
 export const longRequiredString = rawRequiredString.max(500, {
   message: 'forms:tooLongDesc',
 })

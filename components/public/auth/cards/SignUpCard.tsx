@@ -14,8 +14,6 @@ import {
   SignUpResponse,
   signUpSchema,
 } from '@/api/public/auth/signUp'
-import { PiStudentFill } from 'react-icons/pi'
-import { VscOrganization } from 'react-icons/vsc'
 import { InputText } from '@/components/common/form/InputText'
 import { FormProvider } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
@@ -35,15 +33,13 @@ export const SignUpCard = () => {
           message: t('common:accountCreatedSuccessfully'),
           color: 'green',
         })
-        router.push('/auth/sign-in')
+        // router.push('/auth/sign-in')
       },
     },
     {
       asStudent: true,
     },
   )
-
-  const asStudent = methods.watch('asStudent')
 
   return (
     <Card
@@ -57,32 +53,14 @@ export const SignUpCard = () => {
           <Link href="/" className="mx-auto text-3xl font-medium">
             Next 14
           </Link>
-          <span className="font-medium text-gray-500">
-            {t('common:selectAccountType')}
-          </span>
-          <div className="flex gap-4 justify-evenly">
-            <button
-              className={`rounded  w-36 h-36 flex flex-col justify-center items-center font-bold gap-2  transition-colors  ${asStudent ? 'bg-primary text-white hover:bg-primary-hover' : 'bg-gray-100 hover:bg-gray-200 text-gray-500'}`}
-              onClick={() => methods.setValue('asStudent', true)}
-            >
-              <PiStudentFill
-                size={40}
-                className={`${!asStudent ? 'text-primary' : 'text-white'}`}
-              />
-              {t('common:student')}
-            </button>
-            <button
-              className={`rounded  w-36 h-36 flex flex-col justify-center items-center font-bold gap-2  transition-colors  ${!asStudent ? 'bg-primary text-white hover:bg-primary-hover' : 'bg-gray-100 hover:bg-gray-200 text-gray-500'}`}
-              onClick={() => methods.setValue('asStudent', false)}
-            >
-              <VscOrganization
-                size={40}
-                className={`${asStudent ? 'text-primary' : 'text-white'}`}
-              />
-              {t('common:company')}
-            </button>
-          </div>
-
+          <InputText
+            name="username"
+            label={t('common:Username')}
+            placeholder={t('common:Username')}
+            size="md"
+            type="username"
+            required
+          />
           <InputText
             name="email"
             label={t('common:email')}

@@ -1,8 +1,12 @@
-import { requiredEmail, requiredString } from '@/utils/formValidationFormulas'
+import { 
+  requiredEmail, 
+  requiredString, 
+} from '@/utils/formValidationFormulas'
 import axios, { AxiosResponse } from 'axios'
 import { z } from 'zod'
 
 export const signUpSchema = z.object({
+  username: requiredString,
   email: requiredEmail,
   password: requiredString,
   confirmPassword: requiredString,
@@ -21,10 +25,16 @@ export type SignUpResponse = {
 
 export const signUp = (
   data: SignUpFormFields,
-): Promise<AxiosResponse<SignUpResponse>['data']> =>
-  axios({
-    method: 'POST',
-    url: `${process.env.NEXT_PUBLIC_API_URL}/v1/accounts/sign-up`,
-    data,
-    withCredentials: true,
-  }).then(({ data }) => data)
+): Promise<AxiosResponse<SignUpResponse>['data']> => {
+    console.log(process.env.NEXT_PUBLIC_API_URL)
+    return axios({
+      method: 'POST',
+      url: `${process.env.NEXT_PUBLIC_API_URL}/users/sign-up`,
+      data,
+      withCredentials: true,
+    }).then(({ data }) => {
+      console.log(data)
+      return data
+    }).catch(err => console.log(err))
+
+}
