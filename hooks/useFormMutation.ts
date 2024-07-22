@@ -10,7 +10,7 @@ import { useMutation, UseMutationOptions } from '@tanstack/react-query'
 import { AnyZodObject, ZodEffects } from 'zod'
 import { ApiErrorData } from '@/types/api/apiTypes'
 import { notifications } from '@mantine/notifications'
-import { getErrorMessage } from '@/utils/getErrorMessage'
+import { getErrorMessages } from '@/utils/getErrorMessage'
 import { useTranslation } from 'react-i18next'
 
 export const useFormMutation = <FormFields extends FieldValues, ServerResponse>(
@@ -88,22 +88,31 @@ export const useFormMutation = <FormFields extends FieldValues, ServerResponse>(
   const { isPending, isError, isSuccess, mutate } = useMutation({
     mutationFn,
     ...options,
+    onSuccess: (data, variables, context) => {
+      if (options.onSuccess) {
+        options.onSuccess(data, variables, context)
+      }
+    },
     onError: (error: AxiosError<ApiErrorData>, variables, context) => {
       handleError(error)
       if (options.onError) {
         options.onError(error, variables, context)
       } else {
-        notifications.show({
-          title: t('common:errorOccured'),
-          message: getErrorMessage(error),
-          color: 'red',
+        console.log(error.response?.data.errors)
+        const errorMessages = getErrorMessages(error);
+        errorMessages.forEach(message => {
+          notifications.show({
+            title: t('common:errorOccured'),
+            message,
+            color: 'red',
+          })
         })
       }
     },
   })
 
   const handleSubmit = methods.handleSubmit(((data: FormFields) =>
-    mutate(data)) as SubmitHandler<FieldValues>)
+    mutate(data)) as SubmitHandler<FormFields>)
 
   return { methods, handleSubmit, isPending, isError, isSuccess }
 }
