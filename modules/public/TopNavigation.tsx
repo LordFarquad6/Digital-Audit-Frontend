@@ -2,7 +2,7 @@
 
 import { nprogress } from '@mantine/nprogress';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { Switch } from '@mantine/core';
@@ -14,6 +14,7 @@ export const TopNavigation = () => {
   const { t } = useTranslation();
   const { colorScheme, toggleColorScheme } = useThemeStore();
   const [mounted, setMounted] = useState(false);
+  const menuRef = useRef(null);
 
   const { accessToken, logout } = useAuthStore(state => ({
     accessToken: state.accessToken,
@@ -22,7 +23,27 @@ export const TopNavigation = () => {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
 
   if (!mounted) {
     return null;
@@ -41,6 +62,7 @@ export const TopNavigation = () => {
             <RxHamburgerMenu size={25} />
           </button>
           <div
+            ref={menuRef}
             className={`${
               menuOpen ? 'flex' : 'hidden md:flex'
             } flex-col md:flex-row absolute md:static right-0 top-full items-center gap-8 shadow-xl md:shadow-none p-3 md:p-0 dark:bg-gray-800 rounded-lg w-max z-20`}

@@ -165,6 +165,7 @@ const OrganizationPage: React.FC = () => {
                       </Stack>
                     </Group>
                     <Button color="red" onClick={() => handleDeleteEmployee(employee.id)}>Usuń</Button>
+                    <Button variant="outline" color="blue" onClick={() => router.push(`/employees/${employee.id}`)}>Szczegóły</Button>
                   </Stack>
                 </Card>
               ))}
