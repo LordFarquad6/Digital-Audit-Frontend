@@ -8,6 +8,7 @@ import RetireDeviceModal from '@/components/public/devices/RetireDeviceModal';
 import { Device, devicesData, deviceSchema, DeviceSchema } from '@/types/deviceTypes';
 import { useFormMutation } from '@/hooks/useFormMutation';
 import { FormProvider } from 'react-hook-form';
+import ProtectedLayout from '@/app/ProtectedLayout'; // Zaktualizowana ścieżka
 
 const addDevice = async (data: DeviceSchema) => {
   return new Promise<DeviceSchema>((resolve) => {
@@ -16,7 +17,7 @@ const addDevice = async (data: DeviceSchema) => {
       brand: data.brand || '',
       status: data.status || ''
     };
-    return deviceWithDefaults
+    return deviceWithDefaults;
   });
 };
 
@@ -60,28 +61,30 @@ const DevicesPage = () => {
   };
 
   return (
-    <Container>
-      <RetireDeviceModal
-        opened={modalOpened}
-        onClose={() => setModalOpened(false)}
-        onConfirm={confirmRetireDevice}
-        deviceName={deviceToRetire?.name || 'urządzenie'}
-      />
-      <Flex direction={{ base: 'column', md: 'row' }} gap="md">
-        <Box flex={2}>
-          <SimpleGrid cols={1} spacing="md">
-            {devices.map((device) => (
-              <DeviceCard key={device.id} device={device} onRetire={() => handleRetireDevice(device)} />
-            ))}
-          </SimpleGrid>
-        </Box>
-        <Box flex={1}>
-          <FormProvider {...methods}>
-            <AddDeviceForm onSubmit={handleSubmit} />
-          </FormProvider>
-        </Box>
-      </Flex>
-    </Container>
+    <ProtectedLayout>
+      <Container>
+        <RetireDeviceModal
+          opened={modalOpened}
+          onClose={() => setModalOpened(false)}
+          onConfirm={confirmRetireDevice}
+          deviceName={deviceToRetire?.name || 'urządzenie'}
+        />
+        <Flex direction={{ base: 'column', md: 'row' }} gap="md">
+          <Box flex={2}>
+            <SimpleGrid cols={1} spacing="md">
+              {devices.map((device) => (
+                <DeviceCard key={device.id} device={device} onRetire={() => handleRetireDevice(device)} />
+              ))}
+            </SimpleGrid>
+          </Box>
+          <Box flex={1}>
+            <FormProvider {...methods}>
+              <AddDeviceForm onSubmit={handleSubmit} />
+            </FormProvider>
+          </Box>
+        </Flex>
+      </Container>
+    </ProtectedLayout>
   );
 };
 

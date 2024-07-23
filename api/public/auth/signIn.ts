@@ -12,6 +12,7 @@ export type SignInFormFields = z.infer<typeof signInSchema>
 export type SignInResponse = {
   userId: string
   role: string
+  token: string
   createdAt: string
   state: string
   email: string
@@ -29,8 +30,11 @@ export const signIn = (
 ): Promise<AxiosResponse<SignInResponse>['data']> => {
   return axios({
     method: 'POST',
-    url: `${process.env.NEXT_PUBLIC_API_URL}/v1/accounts/sign-in`,
+    url: `${process.env.NEXT_PUBLIC_API_URL}/users/sign-in`,
     data,
     withCredentials: true,
-  }).then(({ data }) => data)
+  }).then(({ data }) => {
+    console.log(data);
+    return data
+  }).catch(error => Promise.reject(error))
 }

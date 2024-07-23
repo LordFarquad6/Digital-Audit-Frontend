@@ -33,7 +33,7 @@ export const SignUpCard = () => {
           message: t('common:accountCreatedSuccessfully'),
           color: 'green',
         })
-        // router.push('/auth/sign-in')
+        router.push('/auth/sign-in')
       },
     },
     {

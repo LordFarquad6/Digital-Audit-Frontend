@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
 
-type Set<T> = (fn: (state: T) => Partial<T>) => void
+type Set<T> = (fn: (state: T) => Partial<T>) => void;
 
 export enum Role {
   ADMIN = 'ADMIN',
@@ -10,10 +10,10 @@ export enum Role {
 }
 
 export type TStateAuthStore = {
-  accessToken: string | undefined
-  id: string | undefined
-  email: string | undefined
-  roles: string[] | undefined
+  accessToken: string | undefined;
+  id: string | undefined;
+  email: string | undefined;
+  roles: string[] | undefined;
 }
 
 export type TActionsAuthStore = {
@@ -22,14 +22,14 @@ export type TActionsAuthStore = {
     _id: string,
     _email: string,
     _roles: string[],
-  ) => void
-  logout: () => void
-  refreshToken: (_accessToken: string) => void
-  setAuthState: (state: TStateAuthStore) => void
-  reset: () => void
+  ) => void;
+  logout: () => void;
+  refreshToken: (_accessToken: string) => void;
+  setAuthState: (state: TStateAuthStore) => void;
+  reset: () => void;
 }
 
-export type IAuthStore = TStateAuthStore & TActionsAuthStore
+export type IAuthStore = TStateAuthStore & TActionsAuthStore;
 
 const initialState: TStateAuthStore = {
   accessToken: undefined,
@@ -47,7 +47,7 @@ const authStore = (set: Set<IAuthStore>): IAuthStore => ({
       id,
       email,
       roles,
-    }))
+    }));
   },
   logout: () => {
     set(() => ({
@@ -55,13 +55,18 @@ const authStore = (set: Set<IAuthStore>): IAuthStore => ({
       id: undefined,
       email: undefined,
       roles: [],
-    }))
+    }));
+    // Przekierowanie po wylogowaniu
+    window.location.href = '/';
   },
   refreshToken: (accessToken: string) => set(() => ({ accessToken })),
   setAuthState: (state: TStateAuthStore) => set(() => state),
   reset: () => set(() => initialState),
-})
+});
 
 export const useAuthStore = create(
-  persist(devtools(authStore), { name: 'panel-auth' }),
-)
+  persist(devtools(authStore), {
+    name: 'panel-auth',
+    getStorage: () => localStorage,
+  })
+);

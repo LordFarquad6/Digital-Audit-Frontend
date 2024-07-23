@@ -1,4 +1,5 @@
-import type { Config } from 'tailwindcss'
+// tailwind.config.js
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: 'selector',
@@ -11,9 +12,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#1b84ff',
-        'primary-hover': '#1770d9',
-        'hero-background': '#e4f5ff',
+        primary: '#1b84ff', 
+        'primary-hover': '#1770d9', 
+        secondary: '#6c757d', 
+        'secondary-hover': '#5a6268', 
+        'hero-background': '#aaaaaa',
         'text-dark': '#334155',
       },
       backgroundImage: {
@@ -24,5 +27,6 @@ const config: Config = {
     },
   },
   plugins: [],
-}
-export default config
+};
+
+export default config;

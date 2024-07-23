@@ -1,42 +1,61 @@
-'use client'
-import { Button, Card } from '@mantine/core'
-import Link from 'next/link'
-import { FormProvider } from 'react-hook-form'
-import { useFormMutation } from '@/hooks/useFormMutation'
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button, Card } from '@mantine/core';
+import Link from 'next/link';
+import { FormProvider } from 'react-hook-form';
+import { useFormMutation } from '@/hooks/useFormMutation';
 import {
   signIn,
   SignInFormFields,
   SignInResponse,
   signInSchema,
-} from '@/api/public/auth/signIn'
-import { notifications } from '@mantine/notifications'
-import { useTranslation } from 'react-i18next'
-import { InputText } from '@/components/common/form/InputText'
-import { useRouter } from 'next/navigation'
+} from '@/api/public/auth/signIn';
+import { notifications } from '@mantine/notifications';
+import { useTranslation } from 'react-i18next';
+import { InputText } from '@/components/common/form/InputText';
 import {
   FacebookLoginButton,
   GoogleLoginButton,
-} from 'react-social-login-buttons'
+} from 'react-social-login-buttons';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export const SignInCard = () => {
-  const { t } = useTranslation()
-  const router = useRouter()
+  const { t } = useTranslation();
+  const router = useRouter();
+  const { login } = useAuthStore();
   const { methods, handleSubmit, isPending } = useFormMutation<
     SignInFormFields,
     SignInResponse
   >(signInSchema, signIn, {
-    onSuccess(data) {
+    onSuccess(data, variables) {
       if (data?.emailConfirmed === false) {
-        router.push(
-          `/auth/confirm-account?email=${data.email}&userId=${data.userId}`,
-        )
+        // router.push(
+        //   `/auth/confirm-account?email=${data.email}&userId=${data.userId}`,
+        // )
       }
+      console.log(data);
+      login(data.token, '', variables.email, [data.role]);
       notifications.show({
         message: t('common:signedInSuccessfully'),
         color: 'green',
-      })
+      });
+
+      router.replace('/');
     },
-  })
+  });
+
+  useEffect(() => {
+    const token = useAuthStore.getState().accessToken;
+    if (token) {
+      router.replace('/');
+    }
+  }, [router]);
+
+  if (typeof window === 'undefined') {
+    return null; 
+  }
 
   return (
     <Card
@@ -130,5 +149,5 @@ export const SignInCard = () => {
         </Link>
       </span>
     </Card>
-  )
-}
+  );
+};
