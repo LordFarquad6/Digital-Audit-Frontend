@@ -23,8 +23,8 @@ export type SignUpResponse = {
 export const signUp = (
   data: SignUpFormFields,
 ): Promise<AxiosResponse<SignUpResponse>['data']> => {
-  console.log('Sign up data:', data)  // Log data before sending
-  console.log('API URL:', process.env.NEXT_PUBLIC_API_URL)  // Log API URL
+  console.log('Sign up data:', data) 
+  console.log('API URL:', process.env.NEXT_PUBLIC_API_URL)  
   return axios({
     method: 'POST',
     url: `${process.env.NEXT_PUBLIC_API_URL}/users/sign-up`,

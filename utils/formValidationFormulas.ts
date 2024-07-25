@@ -97,3 +97,9 @@ export const requiredLocale = z
   .or(z.literal(Locale.es))
   .or(z.literal(Locale.fr))
   .or(z.literal(Locale.pl))
+
+
+export const createOrganization = z.object({
+  name: z.string().min(1, "Organization name is required"),
+});
+  

@@ -56,7 +56,7 @@ const authStore = (set: Set<IAuthStore>): IAuthStore => ({
       email: undefined,
       roles: [],
     }));
-    
+
     window.location.href = '/';
   },
   refreshToken: (accessToken: string) => set(() => ({ accessToken })),

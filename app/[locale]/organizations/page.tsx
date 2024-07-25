@@ -5,27 +5,44 @@ import { Container, SimpleGrid, Title, Button, Group, Card, Text, Stack, Modal, 
 import { useRouter } from 'next/navigation';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { useGetOrganizationsList } from '@/api/public/get/getOrganizations';
+import { createOrganization, CreateOrganizationResponse, NewOrganization } from '@/api/public/post/createOrganization';
 import { notifications } from '@mantine/notifications';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 
 const OrganizationPage: React.FC = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: organizations, error, isLoading } = useGetOrganizationsList();
-  console.log(organizations);
 
   const [modalOpened, setModalOpened] = useState(false);
   const [newOrgName, setNewOrgName] = useState('');
   const [newOrgDescription, setNewOrgDescription] = useState('');
   const [newOrgFounder, setNewOrgFounder] = useState('');
 
+  const mutation = useMutation<CreateOrganizationResponse, unknown, NewOrganization>({
+    mutationFn: createOrganization,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['Organizations']});
+      setModalOpened(false);
+      notifications.show({ message: 'Organization created successfully', color: 'green' });
+    },
+    onError: () => {
+      notifications.show({ message: 'Error creating organization', color: 'red' });
+    }
+  });
+
   const handleAddOrganization = () => {
-    // Logika dodawania organizacji
+    const newOrg: NewOrganization = {
+      name: newOrgName,
+    };
+    mutation.mutate(newOrg);
   };
 
   return (
     <ProtectedLayout>
-      {error && <>{notifications.show({message: "Error occured", color: "red"})}</>}
+      {error && <>{notifications.show({ message: 'Error occurred', color: 'red' })}</>}
       {isLoading ? (
         <>Loading...</>
       ) : (
@@ -36,19 +53,21 @@ const OrganizationPage: React.FC = () => {
           <Group position="center" mb="lg">
             <Button onClick={() => setModalOpened(true)}>Dodaj Nową Organizację</Button>
           </Group>
-          {organizations.length === 0 ? (
+          {organizations?.length === 0 ? (
             <Text align="center">Nie masz żadnych organizacji</Text>
           ) : (
             <SimpleGrid cols={1} spacing="lg">
-              {organizations.map((org) => (
+              {organizations?.map((org) => (
                 <Card key={org.id} shadow="sm" padding="lg" radius="md" withBorder>
                   <Stack>
                     <Text size="lg">{org.name}</Text>
                     <Text size="sm">{"opis organizacji"}</Text>
-                    <Text size="sm">{`Założyciel: jan kowalski`}</Text>
+                    <Text size="sm">{`Założyciel: "jan kowalski"`}</Text>
                     <Text size="sm">{`Data utworzenia: ${format(new Date(org.createdAt), 'yyyy-MM-dd HH:mm:ss')}`}</Text>
                     <Group mt="md">
-                      <Button variant="light" color="blue" onClick={() => router.push(`/organizations/${org.id}`)}>Szczegóły</Button>
+                      <Button variant="light" color="blue" onClick={() => router.push(`/organizations/${org.id}`)}>
+                        Szczegóły
+                      </Button>
                       <Button variant="light" color="red">Usuń</Button>
                     </Group>
                   </Stack>
