@@ -14,7 +14,7 @@ const AssignOwnerModal: React.FC<AssignOwnerModalProps> = ({ modalOpened, setMod
               <Group>
                 <Avatar src={member.profileImageUrl} size={50} radius="xl" />
                 <div style={{ flex: 1 }}>
-                  <Text weight={500}>{member.name}</Text>
+                  <Text>{member.name}</Text>
                   <Text size="sm" color="gray">{member.position}</Text>
                 </div>
                 <Button size="xs" variant="outline" color="blue" onClick={() => console.log(`Przypisano do ${member.name}`)}>

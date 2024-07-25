@@ -1,10 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Container, useMantineTheme, SimpleGrid, Card, Text, Button, Group, Modal, TextInput, Stack, Title, Tabs, Badge, Avatar } from '@mantine/core';
+import { Container, useMantineTheme, Tabs, Badge, Title } from '@mantine/core';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
+import EmployeeList from '@/components/public/organizations/EmployeeList';
+import DeviceList from '@/components/public/organizations/DeviceList';
+import OrganizationDetails from '@/components/public/organizations/OrganizationDetails';
+import { EmployeeModal, DeviceModal, EditOrgModal } from '@/components/public/organizations/Modals';
 
 type Employee = {
   id: string;
@@ -12,7 +16,7 @@ type Employee = {
   lastName: string;
   email: string;
   phone: string;
-  image?: string; 
+  image?: string;
 };
 
 type Device = {
@@ -30,10 +34,6 @@ type Organization = {
 };
 
 const OrganizationPage: React.FC = () => {
-  const router = useRouter();
-  const { accessToken } = useAuthStore(state => ({
-    accessToken: state.accessToken,
-  }));
 
   const theme = useMantineTheme();
 
@@ -55,6 +55,9 @@ const OrganizationPage: React.FC = () => {
   const [newDeviceEmployeeId, setNewDeviceEmployeeId] = useState('');
   const [editOrgName, setEditOrgName] = useState(organization.name);
   const [editOrgDescription, setEditOrgDescription] = useState(organization.description);
+
+  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+  const [action, setAction] = useState<string>('');
 
   useEffect(() => {
     setEmployees([
@@ -109,13 +112,14 @@ const OrganizationPage: React.FC = () => {
 
   const handleDeleteEmployee = (id: string) => {
     setEmployees(employees.filter(employee => employee.id !== id));
-    setDevices(devices.filter(device => device.employeeId !== id)); // Usuwanie powiązanych urządzeń
+    setDevices(devices.filter(device => device.employeeId !== id)); 
   };
+
 
   return (
     <ProtectedLayout>
       <Container>
-        <Title align="center" mb="lg">Zarządzanie Organizacją</Title>
+        <Title mb="lg">Zarządzanie Organizacją</Title>
         
         <Tabs value={activeTab} onChange={setActiveTab} styles={{
           tabControl: {
@@ -129,6 +133,9 @@ const OrganizationPage: React.FC = () => {
           },
         }}>
           <Tabs.List>
+            <Tabs.Tab value="main_panel" style={{ color: activeTab === 'main_panel' ? 'blue' : theme.colors.black }}>
+              Panel główny
+            </Tabs.Tab>
             <Tabs.Tab value="employees" style={{ color: activeTab === 'employees' ? 'blue' : theme.colors.black }}>
               Pracownicy
               <Badge size="sm" ml="xs">{employees.length}</Badge>
@@ -142,167 +149,69 @@ const OrganizationPage: React.FC = () => {
             </Tabs.Tab>
           </Tabs.List>
 
+          <Tabs.Panel value="main_panel" pt="xs">
+            <OrganizationDetails organization={organization} setEditOrgModalOpened={setEditOrgModalOpened} />
+          </Tabs.Panel>
+
           <Tabs.Panel value="employees" pt="xs">
-            <Group position="apart" mb="md">
-              <Title order={3}>Pracownicy</Title>
-              <Button onClick={() => setEmployeeModalOpened(true)}>Dodaj pracownika</Button>
-            </Group>
-            <SimpleGrid 
-              cols={{ base: 1, sm: 2, lg: 3 }} 
-              spacing={{ base: 'lg', sm: 'xl' }} 
-              verticalSpacing={{ base: 'md', sm: 'xl' }}
-            >
-              {employees.map(employee => (
-                <Card key={employee.id} shadow="sm" padding="lg" radius="md" withBorder>
-                  <Stack spacing="xs">
-                    <Group>
-                      <Avatar src={employee.image} alt={`${employee.firstName} ${employee.lastName}`} radius="xl" size="lg" />
-                      <Stack spacing="xs">
-                        <Text weight={700} size="lg">{`${employee.firstName} ${employee.lastName}`}</Text>
-                        <Text size="sm" color="dimmed">{employee.email}</Text>
-                        <Text size="sm" color="dimmed">{employee.phone}</Text>
-                        <Text size="sm" color="dimmed">{`Liczba urządzeń: ${devices.filter(device => device.employeeId === employee.id).length}`}</Text>
-                      </Stack>
-                    </Group>
-                    <Button color="red" onClick={() => handleDeleteEmployee(employee.id)}>Usuń</Button>
-                    <Button variant="outline" color="blue" onClick={() => router.push(`/employees/${employee.id}`)}>Szczegóły</Button>
-                  </Stack>
-                </Card>
-              ))}
-            </SimpleGrid>
+            <EmployeeList
+              employees={employees}
+              devices={devices}
+              handleDeleteEmployee={handleDeleteEmployee}
+              setEmployeeModalOpened={setEmployeeModalOpened}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="devices" pt="xs">
-            <Group position="apart" mb="md">
-              <Title order={3}>Urządzenia</Title>
-              <Button onClick={() => setDeviceModalOpened(true)}>Dodaj urządzenie</Button>
-            </Group>
-            <SimpleGrid 
-              cols={{ base: 1, sm: 2, lg: 3 }} 
-              spacing={{ base: 'lg', sm: 'xl' }} 
-              verticalSpacing={{ base: 'md', sm: 'xl' }}
-            >
-              {devices.map(device => (
-                <Card key={device.id} shadow="sm" padding="lg" radius="md" withBorder>
-                  <Stack>
-                    <Text weight={700} size="lg">{device.name}</Text>
-                    <Text>Lokalizacja: {device.location}</Text>
-                    <Text>Opiekun: {device.caretaker}</Text>
-                  </Stack>
-                </Card>
-              ))}
-            </SimpleGrid>
-          </Tabs.Panel>
-
-          <Tabs.Panel value="organization" pt="xs">
-            <Group position="apart" mb="md">
-              <Title order={3}>Edycja Organizacji</Title>
-              <Button onClick={() => setEditOrgModalOpened(true)}>Edytuj organizację</Button>
-            </Group>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-              <Stack spacing="xs">
-                <Text weight={700} size="lg">{organization.name}</Text>
-                <Text size="sm" color="dimmed">{organization.description}</Text>
-              </Stack>
-            </Card>
+            <DeviceList
+              devices={devices}
+              action={action}
+              setAction={setAction}
+              setSelectedDevice={setSelectedDevice}
+              setDeviceModalOpened={setDeviceModalOpened}
+            />
           </Tabs.Panel>
         </Tabs>
 
-        <Modal
+        <EmployeeModal
           opened={employeeModalOpened}
           onClose={() => setEmployeeModalOpened(false)}
-          title="Dodaj Nowego Pracownika"
-        >
-          <Stack>
-            <TextInput
-              label="Imię"
-              placeholder="Wprowadź imię"
-              value={newEmployeeFirstName}
-              onChange={(event) => setNewEmployeeFirstName(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Nazwisko"
-              placeholder="Wprowadź nazwisko"
-              value={newEmployeeLastName}
-              onChange={(event) => setNewEmployeeLastName(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Email"
-              placeholder="Wprowadź email"
-              value={newEmployeeEmail}
-              onChange={(event) => setNewEmployeeEmail(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Telefon"
-              placeholder="Wprowadź telefon"
-              value={newEmployeePhone}
-              onChange={(event) => setNewEmployeePhone(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Obraz URL"
-              placeholder="Wprowadź URL obrazu"
-              value={newEmployeeImage}
-              onChange={(event) => setNewEmployeeImage(event.currentTarget.value)}
-            />
-            <Button onClick={handleAddEmployee}>Dodaj</Button>
-          </Stack>
-        </Modal>
+          newEmployeeFirstName={newEmployeeFirstName}
+          setNewEmployeeFirstName={setNewEmployeeFirstName}
+          newEmployeeLastName={newEmployeeLastName}
+          setNewEmployeeLastName={setNewEmployeeLastName}
+          newEmployeeEmail={newEmployeeEmail}
+          setNewEmployeeEmail={setNewEmployeeEmail}
+          newEmployeePhone={newEmployeePhone}
+          setNewEmployeePhone={setNewEmployeePhone}
+          newEmployeeImage={newEmployeeImage}
+          setNewEmployeeImage={setNewEmployeeImage}
+          handleAddEmployee={handleAddEmployee}
+        />
 
-        <Modal
+        <DeviceModal
           opened={deviceModalOpened}
           onClose={() => setDeviceModalOpened(false)}
-          title="Dodaj Nowe Urządzenie"
-        >
-          <Stack>
-            <TextInput
-              label="Nazwa"
-              placeholder="Wprowadź nazwę"
-              value={newDeviceName}
-              onChange={(event) => setNewDeviceName(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Lokalizacja"
-              placeholder="Wprowadź lokalizację"
-              value={newDeviceLocation}
-              onChange={(event) => setNewDeviceLocation(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Opiekun"
-              placeholder="Wprowadź opiekuna"
-              value={newDeviceCaretaker}
-              onChange={(event) => setNewDeviceCaretaker(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Przypisany pracownik ID"
-              placeholder="Wprowadź ID pracownika"
-              value={newDeviceEmployeeId}
-              onChange={(event) => setNewDeviceEmployeeId(event.currentTarget.value)}
-            />
-            <Button onClick={handleAddDevice}>Dodaj</Button>
-          </Stack>
-        </Modal>
+          newDeviceName={newDeviceName}
+          setNewDeviceName={setNewDeviceName}
+          newDeviceLocation={newDeviceLocation}
+          setNewDeviceLocation={setNewDeviceLocation}
+          newDeviceCaretaker={newDeviceCaretaker}
+          setNewDeviceCaretaker={setNewDeviceCaretaker}
+          newDeviceEmployeeId={newDeviceEmployeeId}
+          setNewDeviceEmployeeId={setNewDeviceEmployeeId}
+          handleAddDevice={handleAddDevice}
+        />
 
-        <Modal
+        <EditOrgModal
           opened={editOrgModalOpened}
           onClose={() => setEditOrgModalOpened(false)}
-          title="Edytuj Organizację"
-        >
-          <Stack>
-            <TextInput
-              label="Nazwa"
-              placeholder="Wprowadź nazwę organizacji"
-              value={editOrgName}
-              onChange={(event) => setEditOrgName(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Opis"
-              placeholder="Wprowadź opis organizacji"
-              value={editOrgDescription}
-              onChange={(event) => setEditOrgDescription(event.currentTarget.value)}
-            />
-            <Button onClick={handleEditOrganization}>Zapisz zmiany</Button>
-          </Stack>
-        </Modal>
+          editOrgName={editOrgName}
+          setEditOrgName={setEditOrgName}
+          editOrgDescription={editOrgDescription}
+          setEditOrgDescription={setEditOrgDescription}
+          handleEditOrganization={handleEditOrganization}
+        />
       </Container>
     </ProtectedLayout>
   );
