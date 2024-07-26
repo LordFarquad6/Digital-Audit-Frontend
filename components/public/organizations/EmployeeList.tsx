@@ -24,7 +24,7 @@ type Props = {
 
 const EmployeeList: React.FC<Props> = ({ employees, devices, handleDeleteEmployee, setEmployeeModalOpened }) => {
   const router = useRouter();
-
+  console.log(employees)
   return (
     <div>
       <Group mb="md">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Container, useMantineTheme, Tabs, Badge, Title } from '@mantine/core';
+import { Container, useMantineTheme, Tabs, Badge, Title, Loader } from '@mantine/core';
 import ProtectedLayout from '@/app/ProtectedLayout';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -9,6 +9,9 @@ import EmployeeList from '@/components/public/organizations/EmployeeList';
 import DeviceList from '@/components/public/organizations/DeviceList';
 import OrganizationDetails from '@/components/public/organizations/OrganizationDetails';
 import { EmployeeModal, DeviceModal, EditOrgModal } from '@/components/public/organizations/Modals';
+import { useGetOrganizationsList } from '@/api/public/get/getOrganizationEmployees';
+import { OrganizationPageProps } from '@/types/organizationTypes';
+import { useGetOrganizationsDevices } from '@/api/public/get/getOrganizationDevices';
 
 type Employee = {
   id: string;
@@ -33,9 +36,12 @@ type Organization = {
   description: string;
 };
 
-const OrganizationPage: React.FC = () => {
+const OrganizationPage: React.FC<any> = ({ params }) => {
+  const { organizationId: orgId } = params;
 
   const theme = useMantineTheme();
+
+
 
   const [activeTab, setActiveTab] = useState<string>('employees');
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -114,7 +120,9 @@ const OrganizationPage: React.FC = () => {
     setEmployees(employees.filter(employee => employee.id !== id));
     setDevices(devices.filter(device => device.employeeId !== id)); 
   };
-
+  
+  const { data, error, isLoading } = useGetOrganizationsList(orgId as string);
+  const { data: deviceData, error: deviceError, isLoading: isDevicesLoading } = useGetOrganizationsDevices();
 
   return (
     <ProtectedLayout>
@@ -138,11 +146,11 @@ const OrganizationPage: React.FC = () => {
             </Tabs.Tab>
             <Tabs.Tab value="employees" style={{ color: activeTab === 'employees' ? 'blue' : theme.colors.black }}>
               Pracownicy
-              <Badge size="sm" ml="xs">{employees.length}</Badge>
+              <Badge size="sm" ml="xs">{data?.length}</Badge>
             </Tabs.Tab>
             <Tabs.Tab value="devices" style={{ color: activeTab === 'devices' ? 'blue' : theme.colors.black }}>
               Urządzenia
-              <Badge size="sm" ml="xs">{devices.length}</Badge>
+              <Badge size="sm" ml="xs">{deviceData?.length}</Badge>
             </Tabs.Tab>
             <Tabs.Tab value="organization" style={{ color: activeTab === 'organization' ? 'blue' : theme.colors.black }}>
               Edycja Organizacji
@@ -154,8 +162,11 @@ const OrganizationPage: React.FC = () => {
           </Tabs.Panel>
 
           <Tabs.Panel value="employees" pt="xs">
+            {error && <div>Błąd: {error.message}</div>} 
+  
+            {isLoading && <Loader />}
             <EmployeeList
-              employees={employees}
+              employees={data || []}
               devices={devices}
               handleDeleteEmployee={handleDeleteEmployee}
               setEmployeeModalOpened={setEmployeeModalOpened}
@@ -164,7 +175,7 @@ const OrganizationPage: React.FC = () => {
 
           <Tabs.Panel value="devices" pt="xs">
             <DeviceList
-              devices={devices}
+              devices={deviceData || []}
               action={action}
               setAction={setAction}
               setSelectedDevice={setSelectedDevice}

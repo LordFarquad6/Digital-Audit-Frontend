@@ -1,18 +1,12 @@
 import React from 'react';
 import { SimpleGrid, Card, Text, Button, Group, Select, Stack, Title } from '@mantine/core';
-
-type Device = {
-  id: string;
-  name: string;
-  location: string;
-  caretaker: string;
-};
+import {GetOrganizationDevicesResponse} from '@/api/public/get/getOrganizationDevices'
 
 type Props = {
-  devices: Device[];
+  devices: GetOrganizationDevicesResponse[];
   action: string;
   setAction: (action: string) => void;
-  setSelectedDevice: (device: Device) => void;
+  setSelectedDevice: (device: GetOrganizationDevicesResponse) => void;
   setDeviceModalOpened: (opened: boolean) => void;
 };
 
